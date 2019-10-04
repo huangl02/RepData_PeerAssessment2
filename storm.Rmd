@@ -1,0 +1,447 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+## Reproducible Research - final project  
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+options(expressions= 100000)
+```
+
+```{r cache=TRUE}
+#storm<-read.csv("repdata_data_StormData.csv")
+#stormCond<-storm[,c(1,2,8,12,23,24,25,26,27,28)]
+storm<-read.table("stormCond.csv")
+```
+
+```{r message=FALSE}
+library(stringr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r cache=TRUE}
+Event<-storm$EVTYPE
+
+Event2<-str_replace(Event, ".*TORNADO.*", replacement="TORNADO")
+
+Event2<-str_replace(Event2, ".*[tT][sS][tT][mM].*", 
+                    replacement="MARINE THUNDERSTORM WIND")
+
+Event2<-str_replace(Event2, ".*H[aA][iI][lL].*", replacement="HAIL")
+
+Event2<-str_replace(Event2, ".*BLIZZARD.*", replacement="BLIZZARD")
+
+Event2<-str_replace(Event2, ".*WINTER STORM.*", replacement="WINTER STORM")
+
+Event2<-str_replace(Event2, "THUNDERSTORM WIN.*", replacement="THUNDERSTORM WIND")
+
+Event2<-str_replace(Event2, ".*HURRICANE.*", replacement="HURRICANE")
+
+Event2<-str_replace(Event2, ".*FLASH.*", replacement="FLASH FLOOD")
+
+Event2<-str_replace(Event2, ".*BLOWING DUST.*", replacement="DUST STORM")
+
+Event2<-str_replace(Event2, ".*BLOWING SNOW.*", replacement="WINTER STORM")
+
+Event2<-str_replace(Event2, ".*BREAKUP FLOODING.*", replacement="FLOOD")
+
+Event2<-str_replace(Event2, ".*COASTAL FLOOD.*", replacement="COASTAL FLOOD")
+
+Event2<-str_replace(Event2, ".*DOWNBURST.*", replacement="THUNDERSTORM WIND")
+
+Event2<-str_replace(Event2, ".*DRY MIRCOBURST.*", replacement="THUNDERSTORM WIND")
+
+Event2<-str_replace(Event2, "M[iI][cC][rR][oO][bB][uU][rR][sS][tT].*", replacement="DUST STORM")
+
+Event2<-str_replace(Event2, ".*EXTREME HEAT.*", replacement="EXCESSIVE HEAT")
+
+Event2<-str_replace(Event2, ".*EXTREME WIND CHILL.*", replacement="EXTREME COLD")
+
+Event2<-str_replace(Event2, ".*F[rR][eE][eE][zZ][iI][nN][gG] [rR][aA][iI][nN].*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*SURF.*", replacement="HIGH SURF")
+
+Event2<-str_replace(Event2, ".*D[eE][vV][iI][lL].*", replacement="DUST DEVIL")
+
+Event2<-str_replace(Event2, ".*HIGH TIDE.*", replacement="HIGH SURF")
+
+Event2<-str_replace(Event2, ".*AVALANCE.*", replacement="AVALANCHE")
+
+Event2<-str_replace(Event2, ".*BEACH ER.*", replacement="SEICHE")
+
+Event2<-str_replace(Event2, ".*Beach E.*", replacement="SEICHE")
+
+Event2<-str_replace(Event2, ".*Blizz.*", replacement="BLIZZARD")
+
+Event2<-str_replace(Event2, ".*FIRE.*", replacement="WILDFIRE")
+
+Event2<-str_replace(Event2, ".*[cC][oO][aA][sS][tT].*", replacement="COASTAL FLOOD")
+
+Event2<-str_replace(Event2, ".*F[uU][nN][nN].*", replacement="FUNNEL CLOUD")
+
+Event2<-str_replace(Event2, ".*[fF][lL][oO][oO][dD].*", replacement="FLOOD")
+
+Event2<-str_replace(Event2, ".*DUST DEVEL.*", replacement="DUST DEVIL")
+
+Event2<-str_replace(Event2, ".*G[Ll][Aa][Zz][Ee].*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*F[Rr][Ee][Ee][Zz][Ii][Nn][Gg] [fF][oO][gG].*", replacement="FREEZING FOG")
+
+Event2<-str_replace(Event2, "Freezing [dDsS].*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, "FREEZING DRIZZLE.*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*[mM][iI][Xx].*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*SPOUT.*", replacement="WATERSPOUT")
+
+Event2<-str_replace(Event2, ".*Winter Weather.*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*SLEET.*", replacement="SLEET")
+
+Event2<-str_replace(Event2, ".*[iI][cC][cE] [sS][tT][oO].*", replacement="ICE STORM")
+
+Event2<-str_replace(Event2, ".*[hH][Ee][Aa][Vv][Yy] [sS][Nn][Oo].*", replacement="HEAVY SNOW")
+
+Event2<-str_replace(Event2, ".*[bB]lowing [sS][Nn][Oo].*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*B[Ll][Aa][Cc][Kk] I.*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*[dD][rR][yY].*", replacement="DROUGHT")
+
+Event2<-str_replace(Event2, ".*DUST STORM.*", replacement="DUST STORM")
+
+Event2<-str_replace(Event2, ".*DUSTSTORM.*", replacement="DUST STORM")
+
+Event2<-str_replace(Event2, ".*DROUGHT.*", replacement="DROUGHT")
+
+Event2<-str_replace(Event2, ".*H[iI][gG][hH] S.*", replacement="HIGH SURF")
+
+Event2<-str_replace(Event2, ".*SWELL.*", replacement="HIGH SURF")
+
+Event2<-str_replace(Event2, ".*R[Ii][Pp].*", replacement="RIP CURRENT")
+
+Event2<-str_replace(Event2, ".*GUSTNADO.*", replacement="THUNDERSTORM WIND")
+
+Event2<-str_replace(Event2, ".*GUSTY THUND.*", replacement="THUNDERSTORM WIND")
+
+Event2<-str_replace(Event2, ".*[gG][Uu][Ss][Tt][Yy].*", replacement="STRONG WIND")
+
+Event2<-str_replace(Event2, ".*[hH][eE][aA][tT] W.*", replacement="HEAT")
+
+Event2<-str_replace(Event2, ".*[lL][Ii][Gg][Hh][Tt] [sS][Nn].*", replacement="WINTER WEATHER")
+
+Event2<-str_replace(Event2, ".*HIGH WA.*", replacement="HIGH SURF")
+
+Event2<-str_replace(Event2, ".*TYPHOON.*", replacement="HURRICANE")
+
+Event2<-str_replace(Event2, ".*[Vv][Oo].*", replacement="VOLCANIC ASH")
+
+Event2<-str_replace(Event2, "TORNDAO", replacement="TORNADO")
+
+Event2<-str_replace(Event2, ".*[Tt][Oo][Rr][Rr].*", replacement="FLASH FLOOD")
+
+Event2<-str_replace(Event2, ".*UNSEASONABLY [WH].*", replacement="HEAT")
+```
+
+```{r cache=TRUE}
+Event2<-str_replace(Event2, ".*[sS][uU][rR][fF].*", replacement="HIGH SURF")
+
+Event2<-str_replace(Event2, ".*UNSEASONABLY C.*", replacement="EXTREME COLD")
+
+Event2<-str_replace(Event2, ".*Unseasonable C.*", replacement="EXTREME COLD")
+
+Event2<-str_replace(Event2, ".*UNSEASONAL L.*", replacement="EXTREME COLD")
+
+Event2<-str_replace(Event2, ".*BLOW-OUT.*", replacement="HIGH WIND")
+
+Event2<-str_replace(Event2, ".*[lL][aA][kK][eE].*", replacement="LAKE-EFFECT SNOW")
+
+Event2<-str_replace(Event2, ".*[Ll][Aa][Nn][Dd].*", replacement="DEBRIS FLOW")
+
+Event2<-str_replace(Event2, ".*[Ss][Ll][Ii][Dd][Ee].*", replacement="DEBRIS FLOW")
+
+Event2<-str_replace(Event2, ".*DENSE.*", replacement="DENSE FOG")
+
+Event2<-str_replace(Event2, ".*HEAVY SEAS.*", replacement="HIGH SURF")
+
+Event2<-str_replace(Event2, ".*HOT.*", replacement="HEAT")
+
+Event2<-str_replace(Event2, ".*HYPOTHERMIA.*|Hypothermia.*", replacement="Extreme Cold")
+
+Event3<-Event2
+```
+
+```{r cache=TRUE}
+Event3<-str_replace(Event3, "Strong [wW]ind.*|STRONG WIND.*", replacement="STRONG WIND")
+
+Event3<-str_replace(Event3, "STORM SURGE/TIDE", replacement="STORM SURGE")
+
+Event3<-str_replace(Event3, "E[Aa][Rr][Ll][Yy] F.*", replacement="FROST FREEZE")
+
+Event3<-str_replace(Event3, ".*EXCESSIVE [RP].*", replacement="HEAVY RAIN")
+
+Event3<-str_replace(Event3, ".*EXCESSIVE S.*", replacement="HEAVY SNOW")
+
+Event3<-str_replace(Event3, ".*E[Xx][Tt][Rr][Ee][Mm][Ee] [WC].*", replacement="EXTREME COLD")
+
+Event3<-str_replace(Event3, ".*F[rR][oO][sS][tT].*", replacement="FROST FREEZE")
+
+Event3<-str_replace(Event3, ".*F[rR][eE][eE][zZ][eE].*", replacement="FROST FREEZE")
+
+Event3<-str_replace(Event3, "Ice Fog|FOG AND COLD.*", replacement="FREEZING FOG")
+
+Event3<-str_replace(Event3, "[gG][Rr][Aa][Dd].*", replacement="RIP CURRENT")
+
+Event3<-str_replace(Event3, ".*[Hh][Ee][Aa][Vv][Yy] [rR].*", replacement="HEAVY RAIN")
+
+Event3<-str_replace(Event3, ".*[Hh][Ee][Aa][Vv][Yy] [pP].*", replacement="HEAVY RAIN")
+
+Event3<-str_replace(Event3, ".*[Hh][Ee][Aa][Vv][Yy] SH.*", replacement="HEAVY RAIN")
+
+Event3<-str_replace(Event3, "[Hh][iI][gG][hH] [wW].*", replacement="HIGH WIND")
+
+Event3<-str_replace(Event3, "HIGH  WINDS|HIGH", replacement="HIGH WIND")
+
+Event3<-str_replace(Event3, ".*[Ss][uU][rR][fF].*", replacement="HIGH SURF")
+
+Event3<-gsub("HIGH WIND WIND", "HIGH WIND", Event3)
+
+Event3<-str_replace(Event3, ".*[Ss][aA][hH].*", replacement="DUST STORM")
+
+Event3<-str_replace(Event3, ".*CHILL.*", replacement="EXTREME COLD")
+
+Event3<-str_replace(Event3, "C[oO][lL][dD].*", replacement="COLD")
+
+Event3<-str_replace(Event3, ".*COOL.*", replacement="COLD")
+
+Event3<-str_replace(Event3, "EXTREME/.*", replacement="EXTREME COLD")
+
+Event3<-str_replace(Event3, "Excessive COLD", replacement="EXTREME COLD")
+
+Event3<-str_replace(Event3, ".*RECORD [PR].*", replacement="HEAVY RAIN")
+
+Event3<-str_replace(Event3, ".*RECORD S.*", replacement="HEAVY SNOW")
+
+Event3<-str_replace(Event3, ".*Record Wi.*", replacement="HEAVY SNOW")
+
+Event3<-str_replace(Event3, "R[Ee][Cc][Oo][Rr][Dd] C.*", replacement="EXTREME COLD")
+
+Event3<-str_replace(Event3, "R[Ee][Cc][Oo][Rr][Dd] W.*", replacement="EXCESSIVE HEAT")
+
+Event3<-str_replace(Event3, "RECORD/EXCESSIVE HEAT", replacement="EXCESSIVE HEAT")
+
+Event3<-str_replace(Event3, "RECORD  COLD", replacement="EXTREME COLD")
+
+Event3<-str_replace(Event3, "R[Ee][Cc][Oo][Rr][Dd] H[eE].*", replacement="EXCESSIVE HEAT")
+
+Event3<-str_replace(Event3, "RECORD HIGH W.*", replacement="HIGH WIND")
+
+Event3<-str_replace(Event3, "ROGUE.*", replacement="SNEAKER WAVE")
+
+Event3<-str_replace(Event3, "SEVERE TH.*", replacement="THUNDERSTORM WIND")
+
+Event3<-str_replace(Event3, "SEVERE TU.*", replacement="FLOOD")
+
+Event3<-str_replace(Event3, "SEVERE C.*", replacement="EXTREME COLD")
+
+Event4<-Event3
+```
+
+```{r cache=TRUE}
+Event4<-str_replace(Event4, "T[hH][uU].*", replacement="THUNDERSTORM WIND")
+
+Event4<-str_replace(Event4, "URBAN.*", replacement="FLOOD")
+Event4<-str_replace(Event4, "TROPICAL S.*", replacement="TROPICAL STORM")
+Event4<-str_replace(Event4, "TUND.*", replacement="THUNDERSTORM WIND")
+
+Event4<-str_replace(Event4, "WND", replacement="HIGH WIND")
+Event4<-str_replace(Event4, " HIGH WIND", replacement="HIGH WIND")
+
+Event4<-str_replace(Event4, "W[hH][iI].*", replacement="THUNDERSTORM WIND")
+
+Event4<-str_replace(Event4, ".*micoburst.*", replacement="THUNDERSTORM WIND")
+
+Event4<-str_replace(Event4, "HEAVY WET.*", replacement="HEAVY SNOW")
+
+Event4<-str_replace(Event4, ".*[wW][eE][tT].*", replacement="HEAVY RAIN")
+
+Event4<-str_replace(Event4, ".*WARM.*", replacement="HEAT")
+```
+
+```{r}
+Event5<-Event4
+
+Event5<-str_replace(Event5, "^DAM.*", replacement="FLOOD")
+
+Event5<-str_replace(Event5, ".*EXCESSIVE.*", replacement="EXCESSIVE HEAT")
+
+Event5<-str_replace(Event5, ".*Extended.*", replacement="COLD")
+
+Event5<-gsub("[()]", "", Event5)
+
+Event5<-str_replace(Event5, "RAIN HEAVY", replacement="HEAVY RAIN")
+
+Event5<-str_replace(Event5, "DROW.*", replacement="FLOOD")
+
+Event5<-str_replace(Event5, "^SNOWFALL.*", replacement="HEAVY SNOW")
+
+Event5<-str_replace(Event5, ".*[Ss][qQ][Uu].*", replacement="HEAVY SNOW")
+
+Event5<-str_replace(Event5, "SNOWSTORM", replacement="WINTER STORM")
+
+Event5<-gsub("^[sS][nN][oO][Ww].*", "WINTER WEATHER", Event5)
+
+Event5<-str_replace(Event5, ".*S[tT][rR][eE].*", replacement="FLOOD")
+
+Event5<-str_replace(Event5, "E[aA][rR][lL][yY] [sS].*", replacement="WINTER WEATHER")
+
+Event5<-str_replace(Event5, "^L[aA][Tt][eE].*", replacement="WINTER WEATHER")
+
+Event5<-str_replace(Event5, "UNUSUALLY LATE SNOW", replacement="WINTER WEATHER")
+
+Event5<-str_replace(Event5, "ACC.*", replacement="WINTER WEATHER")
+
+Event5<-gsub("^[DFM].* [Ss][Nn][Oo][Ww].*", "WINTER WEATHER", Event5)
+
+Event5<-gsub("RAIN/S.*", "WINTER WEATHER", Event5)
+
+Event5<-gsub("I[Cc][Ee]/S.*", "WINTER WEATHER", Event5)
+
+Event5<-str_replace(Event5, "ICE A.*", replacement="WINTER WEATHER")
+
+Event5<-gsub("^Sea.*", "WINTER WEATHER", Event5)
+
+Event5<-gsub("^ROUGH S.*", "MARINE TROPICAL STORM", Event5)
+
+Event5<-gsub("^FOG", "DENSE FOG", Event5)
+
+Event5<-gsub("^SMOKE", "DENSE SMOKE", Event5)
+
+Event5<-gsub("^DRI.*", "DROUGHT", Event5)
+
+Event5<-gsub("^HVY.*", "HEAVY RAIN", Event5)
+
+Event5<-gsub("^[sS][uU[mM].*", "NONE", Event5)
+
+Event5<-gsub("^W[iI][nN][dD] D.*", "THUNDERSTORM WIND", Event5)
+
+Event5<-gsub("^W[iI][nN][dD].*", "HIGH WIND", Event5)
+
+Event5<-gsub(".*CLOUD", "FUNNEL CLOUD", Event5)
+
+Event5<-gsub("^[PU].* COLD", "COLD", Event5)
+
+Event5<-gsub("^MARINEHIGH WIND", "MARINE HIGH WIND", Event5)
+
+Event5<-gsub("^HIGH WIND.*", "HIGH WIND", Event5)
+
+Event5<-gsub("^Hurricane.*", "HURRICANE", Event5)
+
+Event5<-gsub("^I[cC][EyY] [FJOPR].*", "WINTER WEATHER", Event5)
+
+```
+
+```{r cache=TRUE}
+Event6<-Event5
+
+Event6<-str_replace(Event6, "ICE$", replacement="WINTER WEATHER")
+
+Event6<-gsub("^ WIND","HIGH WIND",Event6)
+
+Event6<-gsub("^LI.* THU.*","THUNDERSTORM WIND",Event6)
+
+Event6<-gsub("^LIG.*","LIGHTNING",Event6)
+
+Event6<-gsub("^ LIG.*","LIGHTNING",Event6)
+
+Event6<-gsub("^\\?","NONE",Event6)
+
+Event6<-str_replace(Event6, "Heatburst", replacement="HEAT")
+
+Event6<-str_replace(Event6, "HYPER.*", replacement="EXCESSIVE HEAT")
+
+Event6<-str_replace(Event6, "LOW TEMPERAT.*", replacement="COLD")
+
+Event6<-str_replace(Event6, "^R[Ee][Cc][Oo][Rr][Dd] T.*", replacement="HEAT")
+
+Event6<-str_replace(Event6, "O[tT][hH][eE][rR]", replacement="NONE")
+
+Event6<-str_replace(Event6, "M[oO][nN].*", replacement="NONE")
+
+Event6<-str_replace(Event6, ".*FLOYD.*", replacement="FLOOD")
+
+Event6<-str_replace(Event6, "LACK.*", replacement="NONE")
+
+Event6<-str_replace(Event6, ".*Accident|.*MISHAP", replacement="NONE")
+
+Event6<-str_replace(Event6, "Metro.*", replacement="THUNDERSTORM WIND")
+Event6<-str_replace(Event6, "EARLY.*", replacement="NONE")
+Event6<-str_replace(Event6, "MILD.*", replacement="NONE")
+Event6<-str_replace(Event6, ".*S[Ee][Vv][Ee][Rr][Ee].*", replacement="NONE")
+vent6<-str_replace(Event6, ".*NORMAL.*", replacement="NONE")
+Event6<-str_replace(Event6, ".*LIGHTS", replacement="NONE")
+Event6<-str_replace(Event6, "PATCHY.*", replacement="WINTER WEATHER")
+Event6<-str_replace(Event6, "UNS.*", replacement="NONE")
+Event6<-str_replace(Event6, "RAINSTORM", replacement="HEAVY RAIN")
+Event6<-str_replace(Event6, ".*Dam.*", replacement="HEAVY RAIN")
+Event6<-str_replace(Event6, "^RAIN.*WIND$", replacement="HIGH WIND")
+Event6<-str_replace(Event6, "^RAIN$", replacement="NONE")
+Event6<-str_replace(Event6, "^PRO.*", replacement="NONE")
+Event6<-str_replace(Event6, ".*RAINFALL.*", replacement="NONE")
+Event6<-str_replace(Event6, ".*May.*", replacement="NONE")
+Event6<-str_replace(Event6, "Record H.*", replacement="HEAT")
+Event6<-str_replace(Event6, "RECORD L.*", replacement="COLD")
+Event6<-str_replace(Event6, "^Record t.*", replacement="HEAT")
+Event6<-str_replace(Event6, "Temperature record", replacement="HEAT")
+Event6<-str_replace(Event6, "WAKE.*", replacement="NONE")
+Event6<-str_replace(Event6, ".*FORCE.*", replacement="MARINE TROPICAL STORM")
+Event6<-str_replace(Event6, "SOU.*", replacement="STRONG WIND")
+Event6<-str_replace(Event6, ".*FLAG.*", replacement="NONE")
+Event6<-str_replace(Event6, "RAP.*", replacement="FLASH FLOOD")
+Event6<-str_replace(Event6, "APA.*", replacement="THUNDERSTORM WIND")
+Event6<-str_replace(Event6, "APA.*", replacement="THUNDERSTORM WIND")
+```
+
+```{r}
+storm2<-cbind(storm, Event6)
+storm2$FaIn<-storm2$FATALITIES+storm2$INJURIES
+s<-with(storm2, tapply(FaIn, as.factor(Event6), sum))
+df<-data.frame(Events=row.names(s),FalInj=s)
+df<-arrange(df, desc(FalInj))
+g<-ggplot(df[1:10,], aes(Events,FalInj))
+g+geom_bar(stat="identity")+theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(y="Fatalities and Injuries")+labs(title="Tornado causes highest fatalities and injuries")+theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+```{r}
+df<-data.frame(events=storm2$Event6, propdmg=storm2$PROPDMG, propexp=storm2$PROPDMGEXP, cropdmg=storm2$CROPDMG, cropexp=storm2$CROPDMGEXP)
+
+df$propexp<-gsub("[-?]", 0, df$propexp)
+df$propexp<-gsub("[+]", 1, df$propexp)
+df$propexp<-gsub("[B]", 9, df$propexp)
+df$propexp<-gsub("[hH]", 2, df$propexp)
+df$propexp<-gsub("[kK]", 3, df$propexp)
+df$propexp<-gsub("[mM]", 6, df$propexp)
+df$propexp<-as.numeric(df$propexp)
+df$propexp[is.na(df$propexp)]<-0
+
+df$cropexp<-gsub("[kK]", 3, df$cropexp)
+df$cropexp<-gsub("[mM]", 3, df$cropexp)
+df$cropexp<-gsub("B", 9, df$cropexp)
+df$cropexp<-gsub("[?]", 0, df$cropexp)
+df$cropexp<-as.numeric(df$cropexp)
+df$cropexp[is.na(df$cropexp)]<-0
+
+df$total<-df$propdmg*10^df$propexp+df$cropdmg*10^df$cropexp
+
+s<-with(df, tapply(total, events, sum))
+df2<-data.frame(events=row.names(s),total=s)
+df2<-arrange(df2, desc(df2$total))
+g<-ggplot(df2[1:10,], aes(x=reorder(events, -total), y=total),fill=total)
+g+geom_bar(stat="identity")+theme(axis.text.x = element_text(angle = 90, hjust = 1))+labs(x="events",y="Property and Crop Damage (US$)")+labs(title="Flood causes the most economic loss")+theme(plot.title = element_text(hjust = 0.5))
+
+```
