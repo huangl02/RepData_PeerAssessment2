@@ -24,24 +24,26 @@ Questions
 
 Your data analysis must address the following questions:
 
-    Across the United States, which types of events (as indicated in the EVTYPE\color{red}{\verb|EVTYPE|}EVTYPE variable) are most harmful with respect to population health?
-    Across the United States, which types of events have the greatest economic consequences?
+1) Across the United States, which types of events (as indicated in the EVTYPE\color{red}{\verb|EVTYPE|}EVTYPE variable) are most harmful with respect to population health?
+   
+2) Across the United States, which types of events have the greatest economic consequences?
 
 Consider writing your report as if it were to be read by a government or municipal manager who might be responsible for preparing for severe weather events and will need to prioritize resources for different types of events. However, there is no need to make any specific recommendations in your report.
 Requirements
 
 For this assignment you will need some specific tools
 
-    RStudio: You will need RStudio to publish your completed analysis document to RPubs. You can also use RStudio to edit/write your analysis.
-    knitr: You will need the knitr package in order to compile your R Markdown document and convert it to HTML
+RStudio: You will need RStudio to publish your completed analysis document to RPubs. You can also use RStudio to edit/write your analysis.
+    
+knitr: You will need the knitr package in order to compile your R Markdown document and convert it to HTML
     
  Publishing Your Analysis
 
 For this assignment you will need to publish your analysis on RPubs.com. If you do not already have an account, then you will have to create a new account. After you have completed writing your analysis in RStudio, you can publish it to RPubs by doing the following:
 
-    In RStudio, make sure your R Markdown document (.Rmd\color{red}{\verb|.Rmd|}.Rmd) document is loaded in the editor
-    Click the Knit HTML\color{red}{\verb|Knit HTML|}KnitHTML button in the doc toolbar to preview your document.
-    In the preview window, click the Publish\color{red}{\verb|Publish|}Publish button.
+In RStudio, make sure your R Markdown document (.Rmd\color{red}{\verb|.Rmd|}.Rmd) document is loaded in the editor
+Click the Knit HTML\color{red}{\verb|Knit HTML|}KnitHTML button in the doc toolbar to preview your document.
+In the preview window, click the Publish\color{red}{\verb|Publish|}Publish button.
 
 Once your document is published to RPubs, you should get a unique URL to that document. Make a note of this URL as you will need it to submit your assignment.
 
